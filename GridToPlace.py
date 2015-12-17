@@ -6143,7 +6143,7 @@ def MethodsPaper():
 	
 	grid_cells = 1100
 	lec_cells =1100
-	res =1600 * 2
+	res =1600 * 2 #no of locations/pixels
 	input_cells = grid_cells + lec_cells
 	actFunction = Input.getOutputId
 	kernel_sizes = np.array([1, 4, 6, 8, 12])
@@ -6184,7 +6184,6 @@ def MethodsPaper():
 	ax = fig.add_subplot(ax_ind[0], ax_ind[1],3)
 	ax.set_xlabel('Grid orientation (degree)')
 	ax.hist([In.theta[0][:In.modules[1]], In.theta[0][In.modules[1]: In.modules[2]],In.theta[0][In.modules[2]: In.modules[3]],In.theta[0][In.modules[3]: In.modules[4]]], label = ['m1', 'm2', 'm3', 'm4'], bins = 20, histtype = 'barstacked')
-	#ax.legend(loc='best', prop={'size':12})
 	for tick in ax.xaxis.get_major_ticks()[::2]:
 		tick.label1.set_visible(False)
 	for tick in ax.yaxis.get_major_ticks()[1:-1]:
@@ -6224,15 +6223,8 @@ def MethodsPaper():
 	n,bins,patches = ax4.hist(infos, label = map(str, kernel_sizes), histtype = 'step',bins = 30, normed =1, cumulative = 1)
 	for p in patches:
 		p[0].set_xy(p[0].get_xy()[:-1])	
-	#n = ax4.hist(real_info, label =['Hargreaves et al.'], bins = [0,0.2,0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2. ,2.2, 2.4, 2.6, 2.8, 3], normed =1, cumulative = 1,histtype = 'step', ec = 'k')[0]
 	n,bins,patches = ax4.hist(real_info, label =['Hargreaves\n et al.'], bins = [0,.2, .4, .6, .8, 1], normed =1, cumulative = 1,histtype = 'step', ec = 'k')
-	#ax.set_ylim(0, int(np.max(np.concatenate((n[0], n[1])))*1.2))
-	#ax4.hist(sizes[-1], label = 'Grid', histtype = 'step', bins = 60, color = 'g')
-	#ax45 = ax4.twinx()
-	#ax45.hist(sizes[0], label = 'LEC', histtype = 'step', bins = 60, color = 'k')
-#	ax4.xaxis.set_ticks([0, 2000, 4000, 6000, 8000])
 	ax4.set_ylim(0, 1.01)
-	#ax4.set_xlim(0, 1.2)
 	for tick in ax4.xaxis.get_major_ticks()[1:-1:2]:
 		tick.set_visible(False)
 	ax4.set_xlabel('spatial information (bit)')
@@ -6251,15 +6243,11 @@ def problematic(location = 'middle'):
 
 
 	noise_levels = [0]
-	#bins_av = np.round(np.arange(0,0.7, 0.1), 3)
 	ax_ind2 = [2,2]
-	#fig = plt.figure()
 	fig2 = plt.figure()
 	In = Grid(number_cells = cells, noiseMethod = Input.makeNoiseRandomFire, actFunction = Input.getOutputId, number_patterns = res, number_to_store =res ,n_e =1,noise_levels = noise_levels, normed = 0, store_indizes = np.tile(np.arange(res), (1,1)), grid_mode = 'modules', rat=1, cage =[2,1])
 	
 	InNormed = Grid(number_cells = cells, noiseMethod = Input.makeNoiseRandomFire, actFunction = Input.getOutputId, number_patterns = res, number_to_store =res ,n_e =1,noise_levels = noise_levels, normed = 1, store_indizes = np.tile(np.arange(res), (1,1)), grid_mode = 'modules', rat=1, cage =[2,1])
-	
-	#InLec = JointInput(grid_cells = cells/2, lec_cells = n_lec, border_cells = 0, inputMethod = Lec.makeActiveRegionsPlaceFields, noiseMethod = Input.makeNoiseRandomFire, actFunction = Input.getOutputId, number_patterns = res, number_to_store =res ,n_e =1,noise_levels = [0], normed = 0, store_indizes = np.tile(np.arange(res), (1,1)), grid_mode = 'modules', rat=1, cage =[2,1],r_to_s = 0.32, spacings = None, sparsity = 0.75)
 	
 	a = res/In.cage[0]
 	if location == 'middle':
@@ -6279,9 +6267,6 @@ def problematic(location = 'middle'):
 	ax = fig2.add_subplot(ax_ind2[0], ax_ind2[1],2)
 	corr = In.getSpatialAutocorrelation(mode = 'same')
 	s = ax.imshow(corr, interpolation = 'none', origin = 'lower')
-	#for distance in [0.14]:
-		#circle = mpl.patches.Ellipse(xy = (In.x_length/2-1,In.y_length/2-1), width = 2*distance*In.y_length, height = 2*distance*In.y_length, angle=0.0, fc = 'none', ec = 'k', lw = 5)
-		#ax.add_patch(circle)
 	locator = mpl.ticker.FixedLocator([0, np.sqrt(res/2) -1 , 2 *np.sqrt(res/2)-1])
 	formater = mpl.ticker.FixedFormatter([str(-np.round(1./np.sqrt(res/2)*np.sqrt(res/2),3)), '0',str(np.round(1./np.sqrt(res/2)*np.sqrt(res/2),3))])
 	ax.xaxis.set_major_locator(locator)
@@ -6301,12 +6286,7 @@ def problematic(location = 'middle'):
 	bins = np.linspace(0,np.sqrt(3), 50)
 	av = InNormed.getAverageOverlapOverDistance(locations = InNormed.getStoredlocations(), bins = bins)
 	av_cor = In.getAverageCorOverDistance(locations = In.getStoredlocations(), bins = bins)
-	#ax.plot(av_cor[1], av_cor[0], label = r'$Corr(\mathbf{p}_{t_0}, \mathbf{p}_t)$')
-	#ax2 = ax.twinx()
 	ax.plot(av[1] ,av[0])
-	#ax.plot(av[1][6] ,av[0][6], marker = 'd', color = 'r')
-	#ax.plot([0, av[1][14]] ,[av[0][14] ,av[0][14]])
-	#ax.yaxis.set_visible(False)
 	ax.set_ylabel(r'$cos\left[ \mathbf{p}(\mathbf{r}_i), \mathbf{p}(\mathbf{r}_j)\right] $')
 	ax.set_xlabel(r'$||\mathbf{r}_i - \mathbf{r}_j||$')
 	for tick in ax.xaxis.get_major_ticks()[::2]:
@@ -6322,9 +6302,7 @@ def problematic(location = 'middle'):
 	Sol = Solution(In = In, Method = Solution.doNothing, weights_given = In.input_stored[0][location].reshape(cells,1), distance = .5, location = location)
 	ax = fig2.add_subplot(ax_ind2[0], ax_ind2[1],4)
 	corr = Sol.activation[0].reshape(In.y_length, In.x_length)
-	#In.getSpatialAutocorrelation(mode = 'same')
 	s = ax.imshow(corr, interpolation = 'none', origin = 'lower')
-	#ax, s = plotCell(In = In, env =0, patterns = np.tile(Sol.activation[0], (1,1,1)), fig = fig2, ax_index = [ax_ind2[0], ax_ind2[1],4], cb = 1, cell = 0)
 	for distance in [0.1]:
 		circle = mpl.patches.Ellipse(xy = (In.x_length/2-1,In.y_length/2), width = 2*distance*In.y_length, height = 2*distance*In.y_length, angle=0.0, fc = 'none', ec = 'k', lw = 2, ls = 'dashed')
 		#circle = mpl.patches.Ellipse(xy = (In.getStoredlocations()[0, location, 0], In.getStoredlocations()[0, location, 1]), width = 2*distance, height = 2*distance, angle=0.0, fc = 'none', ec = 'k',lw = 5, ls = 'dashed')
@@ -6345,10 +6323,11 @@ def problematic(location = 'middle'):
 
 def SVCPaper(location = 'middle', distances = [0.10, 0.25, 0.35]):
 	cells = 1100
-	g_cells = cells
+	g_cells = cells #grid cells
 	connections = None
-	res = 1600*2
-	#a = res
+	res = 1600*2 #no of locationns/pixels
+	
+	## define location of desired place field###########################
 	a = res/2
 	location = 'not'
 	sumed = 0
@@ -6356,48 +6335,45 @@ def SVCPaper(location = 'middle', distances = [0.10, 0.25, 0.35]):
 		y = np.sqrt(res/2)
 		x = np.sqrt(res/2)*2
 		location = np.int(0.5*y *x + 0.5*x)
-
 	else:
-		#location = np.int(np.sqrt(a)/2 *np.sqrt(a)  + np.sqrt(a)/2)
 		x_pixel = np.sqrt(a)*2
 		y_pixel =np.sqrt(a)
 		location = int(int(1/3. * y_pixel) *x_pixel + 1/3. * x_pixel)
+	#########################################################
 		
-	noise_points = 15.
-	noise_levels = np.arange(0,cells+1, int(cells/(noise_points-1)))
-	#noise_levels = [0, cells/10]
-	#noise_levels = [0]
-	#solvers.options['show_progress'] = False
-	#bins_av = np.round(np.arange(0,0.7, 0.1), 3)
-	ax_ind = [3,3]
+	noise_points = 15. #no of different noise levels
+	noise_levels = np.arange(0,cells+1, int(cells/(noise_points-1))) #noise levels evenly distributed
+	ax_ind = [3,3] # subplot indizes of the figure
 
-	#InBase = Grid(number_cells = cells, noiseMethod = Input.makeNoiseRandomFire, actFunction = Input.getOutputId, number_patterns = 4, number_to_store =4 ,n_e =1,noise_levels = [0], normed = 0, store_indizes = np.tile(np.arange(4), (1,1)), grid_mode = 'modules', rat=1, cage =[2,1]))
-	#peak = np.random.uniform(.5, 1.5, size = (1,  g_cells, 50,50))
-	#peak = np.random.uniform(.8, 1.2, size = (1,  g_cells, 50,50))
-	peak = np.random.normal(loc = 1, scale = .05, size = (1,  g_cells, 50,50))
-	#peak = None
+	# peak rates of the place fields in the grid cells
+	peak = np.random.normal(loc = 1, scale = .05, size = (1,  g_cells, 50,50)) 
+	
+	# make grid cell input
 	In = Grid(number_cells = cells, noiseMethod = Input.makeNoiseZero, actFunction = Input.getOutputId, number_patterns = res, number_to_store =res ,n_e =1,noise_levels = noise_levels, normed = 0, store_indizes = np.tile(np.arange(res), (1,1)), grid_mode = 'modules', rat=1, cage =[2,1], sparsity = 1, peak = peak, r_to_s = 0.32)
-	print In.noise_levels
+	
+	# make grid cell input only with module 3 and 4
 	InBig = Grid(number_cells = cells, noiseMethod = Input.makeNoiseZero, actFunction = Input.getOutputId, number_patterns = res, number_to_store =res ,n_e =1,noise_levels = noise_levels, normed = 0, store_indizes = np.tile(np.arange(res), (1,1)), grid_mode = 'modules', rat=2, cage =[2,1], sparsity = 1, peak = peak, r_to_s = 0.32)
 
 
 	fig = plt.figure()
-	#fig.subplots_adjust(left=0.02, bottom=0.02, right=0.98, top=0.98, hspace = 0.24)
 	d_ind =0
 	letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I']
-	for d in distances:
+	
+	#loop over the differen place field radii (0.10, 0.25 and 0.35 cm)
+	for d in distances: 
 		bins_av = np.array([d])
 		bins= bins_av
 		labels = ['M1+M2','all','M3+M4']
 		colors =['b', 'g', 'r']
 		distance = bins_av[0]
 		
+		## Apply support vector machine
+		# for all modules
 		SVCAll = Solution(In = In, Method = Solution.findPlaceWeightSVC, distance = distance, location = location, max_weight = -1, non_negative = 0)
+		# only grid cell input with module 3 and 4
 		SVCBig = Solution(In = InBig, Method = Solution.findPlaceWeightSVC, distance = distance, location = location, max_weight = -1, non_negative = 0)
 
-		
-	
-	
+		#### rate map examples (first column of the figure)
 		grid = ImageGrid(fig, [ax_ind[0], ax_ind[1],1+ d_ind*3], nrows_ncols = (3,1),axes_pad=0.1, aspect = 1 ,share_all= 1, cbar_mode = 'none')
 		for i in range(3):
 			circle = mpl.patches.Ellipse(xy = (In.getStoredlocations()[0, location, 0], In.getStoredlocations()[0, location, 1]), width = 2*distance, height = 2*distance, angle=0.0, fc = 'none', ec = 'k', lw = 2, ls = 'dashed')
@@ -6410,38 +6386,16 @@ def SVCPaper(location = 'middle', distances = [0.10, 0.25, 0.35]):
 		max_fire = np.max(np.concatenate( (SVCAll.activation[1], SVCAll.activation[0])))
 		min_fire = np.min(np.concatenate( (SVCAll.activation[1], SVCAll.activation[0])))
 		im ,s = plotCell(In = In, env =0, patterns = np.tile(SVCAll.activation[0], (1,1,1)), fig = fig, ax = grid[0], cb = 0, cell = 0, vmin = min_fire, vmax = max_fire )
-		#plotCell(In = In, env =0, patterns = np.tile(SVCAll.activation[1], (1,1,1)), fig = fig, ax = grid[1], cb = 0, cell = 0,vmin = min_fire, vmax = max_fire)
 		plotCell(In = In, env =0, patterns = np.tile(SVCAll.getActivationMapThres(sumed = sumed)[0], (1,1,1)), fig = fig, ax = grid[1], cb = 0, cell = 0,vmin = min_fire, vmax = max_fire)
 		plotCell(In = In, env =0, patterns = np.tile(SVCAll.getActivationMapThres(noise = 1, sumed = sumed )[1], (1,1,1)), fig = fig, ax = grid[2], cb = 0, cell = 0,vmin = min_fire, vmax = max_fire)
-		#fig.colorbar(s, cax = grid.cbar_axes[0])
 		for t in grid.cbar_axes[0].yaxis.get_major_ticks()[1:-1]:
 			t.set_visible(False)
-		#grid[0].set_ylabel(r"$\mathbf{w}^T \mathbf{p}$")
-		#grid[1].set_ylabel(r"$\mathbf{w}^T \mathbf{p} > c$")
 		grid[1].set_ylabel(str(int(np.round(np.pi * d**2 *10000))) + r'$cm^2$')
-		#grid[2].set_ylabel(r"$\mathbf{w}^T \tilde{\mathbf{p}} > c$")
 		makeLabel(ax = grid[0], label = letters[d_ind * 3], sci = 0 )
-		#grid.set_tilte(str(int(np.round(np.pi * d**2 *10000))) + r'$cm^2$')
+
 		
-		
-		
-		
-		
-		#ax = fig.add_subplot(ax_ind[0], ax_ind[1],1 + d_ind*4)
-		#ax.set_title('Correlation')
-		#ax.plot(1-In.getOrigVsOrig(), SVCAll.getCorr(), label = 'SVC',c='b', marker = 'd')
-		##ax.plot(In.noise_levels, SVCAll.getCorrWithout(), linestyle = ':',c='b')
-		#ax.set_ylim(0,1)
-		##ax.legend(loc = 'lower left',prop={'size':10})
-		
+		### second column of the figure
 		ax = fig.add_subplot(ax_ind[0], ax_ind[1],2+ d_ind*3)
-		#ax.set_title(str(np.round(np.pi * d**2 *10000)) + ' cm2')
-		#ax.set_ylabel('proportion wrong')
-		#ax.set_xlabel('proportion wrong in EC')
-		#ax.plot(np.array(In.noise_levels) * 1./cells ,SVCAll.getNumberWrongPixels(sumed = sumed), label = 'Modules 1-4',c='b',marker = 'd')
-		#ax.plot(np.array(In.noise_levels) *1./cells,SVCBig.getNumberWrongPixels(sumed = sumed), label = 'Modules 3+4',c='b',marker = 'd', linestyle = '--')
-		#ax.plot(np.array(In.noise_levels)[1] * 1./cells ,SVCAll.getNumberWrongPixels(sumed = sumed)[1],c='r',marker = 'd')
-	
 		ax.set_ylabel(r'$\epsilon$')
 		ax.set_xlabel('no. lesioned cells')
 		ax.plot(np.array(In.noise_levels) * 1 ,SVCAll.getNumberWrongPixels(sumed = sumed), label = 'Mod. 1-4',c='b')
@@ -6457,20 +6411,13 @@ def SVCPaper(location = 'middle', distances = [0.10, 0.25, 0.35]):
 		makeLabel(ax = ax, label = letters[d_ind * 3+1], sci = 0 )	
 		
 	
-	
+		### Third column of the figure
 		ax = fig.add_subplot(ax_ind[0], ax_ind[1],3+ d_ind*3)
-		#ax.set_title(str(int(np.round(np.pi * d**2 *10000))) + r'$cm^2$')
 		ax.set_ylabel('|w|')
 		w = np.abs(SVCAll.w[:,0])
-		#w = SVCAll.w[:,0]
 		ax.set_xlabel('Module')
-		#per =  np.percentile(w[:In.modules[1]], [95, 75])
 		for i in range(4):
-		#ax.boxplot([w[:In.modules[1]], w[In.modules[1]: In.modules[2]],w[In.modules[2]: In.modules[3]],w[In.modules[3]: In.modules[4]]], whis = [.05, .95], flierprops = dict(marker='o'))
 			ax.scatter([i+1] * w[In.modules[i]:In.modules[i+1]].shape[0], w[In.modules[i]:In.modules[i+1]])
-		#y_lim = ax.get_ylim()
-		#ax.set_ylim(-1, y_lim[1]+1)
-		#ax.set_ylim(np.min(w)*1.5, np.max(w)*1.1)
 		for tick in ax.yaxis.get_major_ticks()[::2]:
 			tick.label1.set_visible(False)
 		locator = mpl.ticker.FixedLocator([1,2,3,4,5])
@@ -6502,30 +6449,25 @@ def SVCPaperOneMod(location = 'middle', distances = [0.35]):
 		y_pixel =np.sqrt(a)
 		location = int(int(1/3. * y_pixel) *x_pixel + 1/3. * x_pixel)
 		
-	noise_points = 15.
-	#noise_levels = np.arange(0,cells+1, int(cells/(noise_points-1)))
-	noise_levels = np.round(np.linspace(0, cells-1, noise_points))
-	#noise_levels = [0, cells/10]
-	#noise_levels = [0]
-	#solvers.options['show_progress'] = False
-	#bins_av = np.round(np.arange(0,0.7, 0.1), 3)
-	ax_ind = [max(len(distances),2),3]
-
-	#InBase = Grid(number_cells = cells, noiseMethod = Input.makeNoiseRandomFire, actFunction = Input.getOutputId, number_patterns = 4, number_to_store =4 ,n_e =1,noise_levels = [0], normed = 0, store_indizes = np.tile(np.arange(4), (1,1)), grid_mode = 'modules', rat=1, cage =[2,1]))
-	#peak = np.random.uniform(.5, 1.5, size = (1,  g_cells, 50,50))
-	#peak = np.random.uniform(.8, 1.2, size = (1,  g_cells, 50,50))
-	peak = np.random.normal(loc = 1, scale = .05, size = (1,  g_cells, 50,50))
-	#peak = None
-
-	#fig6 = plt.figure()
-	#fig5 = plt.figure()
+	noise_points = 15. #no of different noise levels
+	noise_levels = np.arange(0,cells+1, int(cells/(noise_points-1))) #noise levels evenly distributed
+	
 	fig = plt.figure()
-	#fig.subplots_adjust(left=0.02, bottom=0.02, right=0.98, top=0.98, hspace = 0.24)
+	ax_ind = [max(len(distances),2),3] # indizes of the subplots
+
+	# peak rates of the place fields in the grid cells
+	peak = np.random.normal(loc = 1, scale = .05, size = (1,  g_cells, 50,50))
+
 	d_ind =0
 	letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I']
+	
+	#the grid spacings which are investigated; -1 means grid cell input with all modules and wsm cells
 	grid_spacing = [.7,1.,1.3,1.6,2., -1]
-	#grid_spacing = [ -1, -2]
+	
+	#number of simulations
 	number_sims =10
+	
+	#loop over the differen place field radii, here only 35cm is computed
 	for d in distances:
 		data = np.zeros([len(grid_spacing), noise_points])
 		for iteration in range(number_sims):
@@ -6536,39 +6478,25 @@ def SVCPaperOneMod(location = 'middle', distances = [0.35]):
 			distance = bins_av[0]
 			
 			for spacing in grid_spacing:
-				spacings =  np.ones([1,cells]) * spacing
-				orientations = np.zeros([1,g_cells])
+				spacings =  np.ones([1,cells]) * spacing #spacing of grid cell population, here only one spacing
+				orientations = np.zeros([1,g_cells]) #orientation of grid cell population, here only one orientation
 				if spacing == -1 or spacing == -2: #wsm cells
 					if spacing == -1:
-						grid_cells = int(cells/6.)
-						print '-------------------------------------', grid_cells
+						grid_cells = int(cells/6.) #number grid cells
+						# set up input with wsm cells; grid cells population is drwan from all modules
 						In = JointInput(grid_cells = grid_cells, lec_cells = cells - grid_cells, border_cells = 0, inputMethod = Lec.makeActiveFilter, noiseMethod = Input.makeNoiseZero, actFunction = Input.getOutputId, number_patterns = res, number_to_store =res ,n_e =1,noise_levels = noise_levels, normed = 0, store_indizes = np.tile(np.arange(res), (1,1)), grid_mode = 'modules', rat=1, cage =[2,1],r_to_s = 0.32, spacings = None, sparsity = 1, size_kernel = 6, peak = None)
-						print noise_levels
-						print In.noise_levels
-						for k in range(4):
-	
-							cells_to_plot = [0,400, 800, -1]
-							#[a,s] = plotCell(In = In, patterns = In.noisy_input_stored, env =0, only_stored = False, noise = 0, fig = fig5, ax_index = [3,4,d_ind*4 +(k+1)], cb = 0, cell = cells_to_plot[k], zeros = 1)
-							#a.yaxis.set_visible(False)
-							#a.xaxis.set_visible(False)
 					else:
+						# set up input; wsm cells only
 						In = JointInput(grid_cells = 0, lec_cells = cells, border_cells = 0, inputMethod = Lec.makeActiveFilter, noiseMethod = Input.makeNoiseZero, actFunction = Input.getOutputId, number_patterns = res, number_to_store =res ,n_e =1,noise_levels = noise_levels, normed = 0, store_indizes = np.tile(np.arange(res), (1,1)), grid_mode = 'linear', rat=1, cage =[2,1],r_to_s = 0.32, spacings = None, sparsity = 1, size_kernel = 6, peak = None)
 	
 				else:
+					# set up input grid cells only with one spacing and one orientation
 					In = Grid(number_cells = cells, noiseMethod = Input.makeNoiseZero, actFunction = Input.getOutputId, number_patterns = res, number_to_store =res ,n_e =1,noise_levels = noise_levels, normed = 0, store_indizes = np.tile(np.arange(res), (1,1)), grid_mode = 'linear', rat=1, cage =[2,1], sparsity = 1, peak = peak, spacings = spacings, theta = orientations, r_to_s = 0.32 )
-					if spacing == 1.3:
-						for k in range(4):
-		
-							cells_to_plot = [0,100, 105, -1]
-							#[a,s] = plotCell(In = In, patterns = In.noisy_input_stored, env =0, only_stored = False, noise = 0, fig = fig6, ax_index = [3,4,d_ind*4 +(k+1)], cb = 0, cell = cells_to_plot[k], zeros = 0)
-							#a.yaxis.set_visible(False)
-							#a.xaxis.set_visible(False)
 				
+				## apply SVM
 				SVCAll = Solution(In = In, Method = Solution.findPlaceWeightSVC, distance = distance, location = location, max_weight = -1, non_negative = 0)
 	
-	
-			
-		
+				## draw rate maps (first column of figure)
 				if spacing == -1 and iteration == 0:
 					grid = ImageGrid(fig, [ax_ind[0], ax_ind[1],1+ d_ind*3], nrows_ncols = (3,1),axes_pad=0.1, aspect = 1 ,share_all= 1, cbar_mode = 'none')
 					for i in range(3):
@@ -6582,25 +6510,17 @@ def SVCPaperOneMod(location = 'middle', distances = [0.35]):
 					max_fire = np.max(np.concatenate( (SVCAll.activation[1], SVCAll.activation[0])))
 					min_fire = np.min(np.concatenate( (SVCAll.activation[1], SVCAll.activation[0])))
 					im ,s = plotCell(In = In, env =0, patterns = np.tile(SVCAll.activation[0], (1,1,1)), fig = fig, ax = grid[0], cb = 0, cell = 0, vmin = min_fire, vmax = max_fire )
-					#plotCell(In = In, env =0, patterns = np.tile(SVCAll.activation[1], (1,1,1)), fig = fig, ax = grid[1], cb = 0, cell = 0,vmin = min_fire, vmax = max_fire)
 					plotCell(In = In, env =0, patterns = np.tile(SVCAll.getActivationMapThres(sumed = sumed)[0], (1,1,1)), fig = fig, ax = grid[1], cb = 0, cell = 0,vmin = min_fire, vmax = max_fire)
 					plotCell(In = In, env =0, patterns = np.tile(SVCAll.getActivationMapThres(noise = 1, sumed = sumed )[1], (1,1,1)), fig = fig, ax = grid[2], cb = 0, cell = 0,vmin = min_fire, vmax = max_fire)
-					#fig.colorbar(s, cax = grid.cbar_axes[0])
 					for t in grid.cbar_axes[0].yaxis.get_major_ticks()[1:-1]:
 						t.set_visible(False)
-					#grid[0].set_ylabel(r"$\mathbf{w}^T \mathbf{p}$")
-					#grid[1].set_ylabel(r"$\mathbf{w}^T \mathbf{p} > c$")
 					grid[1].set_ylabel(str(int(np.round(np.pi * d**2 *10000))) + r'$cm^2$')
-					#grid[2].set_ylabel(r"$\mathbf{w}^T \tilde{\mathbf{p}} > c$")
 					makeLabel(ax = grid[0], label = letters[d_ind * 3], sci = 0 )
-					#grid.set_tilte(str(int(np.round(np.pi * d**2 *10000))) + r'$cm^2$')
-				
+
 				data[spacing == np.array(grid_spacing)] += SVCAll.getNumberWrongPixels(sumed = sumed)
 		
-
-		
+		### second plot of Figure
 		data /= number_sims*1.
-		print ax_ind, 'ax_ind--------------------------------------------------------'
 		ax = fig.add_subplot(ax_ind[0], ax_ind[1],2+ d_ind*3)
 		ax.set_ylabel(r'$\epsilon$')
 		ax.set_xlabel('no. lesioned cells')
@@ -6627,21 +6547,25 @@ def SVCPaperOneMod(location = 'middle', distances = [0.35]):
 def hebbPaperNew():
 	grid_cells = 0
 	border_cells = 0
-	lec_cells = 1100
-	out_cells = 2500
+	lec_cells = 1100 #wsm cells
+	out_cells = 2500 #cells in ca3
 	dg_cells = 12000
-	res =1600*2
+	res =1600*2 #no. of locations/pixels
 	input_cells = grid_cells + lec_cells
-	sparsity_ca3 =.032
-	noise_points = 19
+	sparsity_ca3 =.032 #activation level in ca3
+	noise_points = 19 #no. of noise levels
 	
+	##### Init of parameter for the network
 	cells = dict(Ec = input_cells, Ca1 = 4200, Ca3 = out_cells, Dg = dg_cells)
+	#numner winner in each region
 	number_winner = dict(Ec = int(input_cells*0.35), Ca1 = int(4200*0.097), Ca3 = int(out_cells*sparsity_ca3), Dg = int(dg_cells * 0.005))
+	#connectivity among regions
 	connectivity = dict(Ec_Dg = 0.32, Dg_Ca3 = 0.0006, Ec_Ca3 =0.32, Ca3_Ca3 = 0.24, Ca3_Ca1 = 0.32, Ca1_Ec = 0.32, Ec_Ca1 = 0.32)
 	learnrate = dict(Ec_Dg = 0, Dg_Ca3 = None, Ca3_Ec = 1, Ec_Ca3 =1, Ca3_Ca3=1, Ca3_Ca1 = 0.5, Ec_Ca1 = 1, Ca1_Ec = 1, Ca1_Sub = 1, Sub_Ec = 1, Ec_Sub = 0)
 	actFunctionsRegions = dict(Ec_Dg = Network.getOutputWTALinear, Dg_Ca3 = Network.getOutputWTALinear, Ca3_Ec = Network.getOutputWTALinear, Ec_Ca3 = Network.getOutputWTALinear, Ca3_Ca3 = AutoAssociation.getOutputWTA, Ca3_Ca1= Network.getOutputWTALinear, Ca1_Ec = Network.getOutputWTALinear, Ec_Ca1 = Network.getOutputWTALinear)
 	
 	
+	#### load filed sizes found by mizuseki et al
 	foo = open( './sizes.csv', "rb" ) #sizes Mizuseke et al
 	real_sizes = np.loadtxt(foo, delimiter = ',', dtype = np.float64)
 	real_sizes[:,1] *= 10000
@@ -6651,57 +6575,40 @@ def hebbPaperNew():
 			real_size_dis.append(s[0])
 	
 	
-	#foo = open( '/home/torsten/Documents/sizes.csv', "rb" )
-	#real_sizes = np.loadtxt(foo, delimiter = ',', dtype = np.float64)
-	
-	#real_sizes[:,1] *= 10000
-	#real_size_dis2 = []
-	#for s in np.array(real_sizes, 'int'):
-		#for i in range(s[1]):
-			#real_size_dis2.append(s[0])
-	#fig =plt.figure()
-	#ax = fig.add_subplot(111)
-	#ax.hist([real_size_dis2, real_size_dis], label = ['me', 'Amir'], normed = 1, bins = 15, histtype = 'step' )
-	#plt.legend()
-	#plt.show()
-	
-		
+
+	#### load spatial info in LEC cells found by mizuseki et al	
 	foo = open( './spatial_info_ca3.csv', "rb" ) # spatial info hargraeves et al
 	real_info_ca3 = np.loadtxt(foo, delimiter = ',', dtype = np.float64)
 	real_info_ca3[:,1] *= 10000
 	real_info_ca3_dis = []
 	for s in np.array(real_info_ca3, 'int'):
 		for i in range(s[1]):
-			real_info_ca3_dis.append(s[0])
-					
-	real_info = [0.1] *45 + [0.3]*15 +[0.5]*4 +[0.7]*1 +[.9]	#hargreaves
+			real_info_ca3_dis.append(s[0])			
+	real_info = [0.1] *45 + [0.3]*15 +[0.5]*4 +[0.7]*1 +[.9]#hargreaves
 
+	### CA3 is activated by DG
 	Ca3Activation = None
+	
+	### parameters
 	bins = np.linspace(0,np.sqrt(3), 50)
 	actFunction = Input.getOutputId
 	
 
-	min_size = 200 #min pf size
+	min_size = 200 #min size of pf to be considered as such
 	max_size = None
-	min_rate = 0.2 # min prop. of max rate
+	min_rate = 0.2 # min prop. of max rate that is considered as active pixel
 	si_criterion = False
 	colors = ['b', 'r', 'c', 'm', 'k']
 	
-	proportions = np.round(np.array([0, 1,1.25,2,3,4,5,6])/6., 2) #grid proportions
+	proportions = np.round(np.array([0, 1,1.25,2,3,4,5,6])/6., 2) #grid proportions in the input that are investigated
 	sizes_to_plot = np.round(np.array([0, 1,2,3,6])/6.,2) #proportions shown in all figures
+
 	
-	
-	#sizes_to_plot = np.array([0,0.125, .25, .5, 1])
-	#sizes_to_plot = np.array([0,.125, 1])
-	#proportions = np.round(np.array([0, 1,6])/6., 2)
-	#sizes_to_plot = np.round(np.array([0, 1,6])/6.,2)
-	
-	props_to_plot = [.17, None]
+	props_to_plot = [.17, None] ## default value of grid porpotion is props_to_plot[0]
 	labels = map(str, proportions)
 	kernel_size = 6 #default kernel for wsm cells
 
-	
-	kernel_sizes = np.array([1, 2, 4, 6, 8, 10, 12, 14,16]) # different kernel sizes for wsm cells
+	kernel_sizes = np.array([1, 2, 4, 6, 8, 10, 12, 14,16]) # different kernel sizes applied for wsm cells
 	kernels_to_plot= np.array([1, 4, 6, 8, 12]) #used in all figures
 	
 	
@@ -6727,7 +6634,7 @@ def hebbPaperNew():
 	place_cells_kernel =  np.zeros(kernel_sizes.shape[0])
 
 	
-
+	### loop over different grid proportions
 	for p, prop in enumerate(proportions):
 		g_cells = int(input_cells * prop)#no grid cells
 		l_cells = input_cells -g_cells#no wsm cells
@@ -6735,26 +6642,34 @@ def hebbPaperNew():
 			noise_levels = np.array(np.linspace(0,input_cells-1, noise_points), 'int')
 		else:
 			noise_levels = [0]
-		peak = np.random.normal(loc = 1, scale = .1, size = (1,  g_cells, 50,50))#peak rates of grid cells
+		#peak rates of grid fields in grid cells
+		peak = np.random.normal(loc = 1, scale = .1, size = (1,  g_cells, 50,50))
+		## set up input
 		In = JointInput(grid_cells = g_cells, lec_cells = l_cells, border_cells = border_cells, inputMethod = Lec.makeActiveFilter, noiseMethod = Input.makeNoiseZero, actFunction = actFunction, number_patterns = res, number_to_store =res ,n_e =1,noise_levels = noise_levels, normed = 0, store_indizes = np.tile(np.arange(res), (1,1)), grid_mode = 'modules', rat=1, cage =[2,1],r_to_s = 0.32, spacings = None, sparsity = .99, size_kernel = kernel_size, peak = peak)
 		
+		##set up network
 		hippo = HippocampusFull(In = In, cells = cells, number_winner = number_winner, just_ca3 = 1, rec = 0 ,connectivity=connectivity,learnrate=learnrate, actFunctionsRegions = actFunctionsRegions, Ca3Activation = Ca3Activation)
+		## Set up Spatial Class to analyse CA3 activations
 		SpatialSim = Spatial(patterns = np.copy(hippo.Ec_Ca3.Cor['StoredRecalled'].patterns_2[0]), cage = In.cage, min_size = min_size, min_rate = min_rate, max_size = max_size, si_criterion = si_criterion)
+		
+		##get the different statistics
 		s = SpatialSim.getfieldSizes()
 		sizes.append(s[s > 0])
 		numbers[p] = SpatialSim.getAverageFieldNumberActiveCellsWithField()
 		active[p] = SpatialSim.getNumberActiveCells()
 		place_cells[p] = SpatialSim.getNumberCellsWithField()
 		av_sizes[p] = SpatialSim.getAverageFieldSize()
+		
+		
 		if prop == props_to_plot[0]:
 			numbers_std = SpatialSim.getAverageFieldNumberActiveCellsWithFieldStd()
 			sizes_std = SpatialSim.getAverageFieldSizeStd()
-			
-		if prop == props_to_plot[0]: #cell examples
+		
+		########## plot rate map examples of ca3 cells
+		if prop == props_to_plot[0]: 
 			grid = ImageGrid(fig, [ax_ind[0], ax_ind[1],1], nrows_ncols = (3,2),axes_pad=0.1, aspect = 1 ,share_all= 1, cbar_mode = 'none',cbar_pad = 0)
 			cells_to_plot = SpatialSim.getPlaceCell(4)
 			for j in range(3):
-				#grid[k].set_title(str(np.round(info_ca3[prop == proportions][0][cells_to_plot[j]], 3)))
 				[a,s] = plotCell(In = In, patterns = hippo.Ec_Ca3.Cor['StoredStored'].patterns_2, env =0, fig = fig, ax = grid[2*j], cb = 0, cell = cells_to_plot[j], zeros = 0)
 				grid[2*j].set_xlim(0, In.cage[0])
 				grid[2*j].set_ylim(0, In.cage[1])
@@ -6764,16 +6679,14 @@ def hebbPaperNew():
 			grid[0].set_xlabel('1m')
 			makeLabel(ax = grid[0], label = 'A', sci = 0 )
 			for j in range(3):
-				#grid[2*j+1].set_title(str(np.round(info_ca3[prop == proportions][0][cells_to_plot[j]], 3)))
 				[a,s] = plotCell(In = In, patterns = hippo.Ec_Ca3.Cor['StoredRecalled'].patterns_2, env =0, fig = fig, ax = grid[2*j+1], cb = 0, cell = cells_to_plot[j], zeros = 0)
 				grid[2*j+1].set_xlim(0, In.cage[0])
 				grid[2*j+1].set_ylim(0, In.cage[1])
 				grid[2*j+1].yaxis.set_visible(False)
 				grid[2*j+1].xaxis.set_visible(False)
-				#grid.cbar_axes[2*j+1].colorbar(s)
 			
 			
-			#lesion studies
+			####################lesion studies
 			lesions = list(np.linspace(0,1,noise_points))#lesion prop of mec or lec or grid	
 			lesion_mec = np.tile(In.patterns, (1,len(lesions),1,1))
 			lesion_lec = np.tile(In.patterns, (1,len(lesions),1,1))
@@ -6808,9 +6721,10 @@ def hebbPaperNew():
 			lession_cells = np.array(lesions)* input_cells/2.
 			lession_cells_grid = np.array(lesions)* input_cells * prop
 			lession_cells_all = np.array(lesions)* input_cells
+			lession_cells_no_grid = np.array(lesions)* input_cells
 			normalize(In.patterns[0])
 
-			### cell examples in lesion studies
+			##### plot cell examples in lesion studies
 			cells_to_plot = SpatialSim.getPlaceCell(20)
 			fig3 = plt.figure()
 			k = 1
@@ -6836,7 +6750,7 @@ def hebbPaperNew():
 				if i==1:
 					a.set_title('grid')
 				k+=4
-			
+			##### more examples
 			fig4 = plt.figure()
 			k = 1
 			cells_to_plot = SpatialSim.getPlaceCell(20)
@@ -6863,32 +6777,8 @@ def hebbPaperNew():
 					a.set_title('grid')
 				k+=4
 
-			GridLesion = Spatial(patterns = activation_grid[0,-1], cage = In.cage, min_size = min_size, min_rate = min_rate, max_size = max_size, si_criterion = si_criterion)
-			MecLesion = Spatial(patterns = activation_mec[0,-1], cage = In.cage, min_size = min_size, min_rate = min_rate, max_size = max_size, si_criterion = si_criterion)
-			LecLesion =  Spatial(patterns = activation_lec[0,-1], cage = In.cage, min_size = min_size, min_rate = min_rate, max_size = max_size, si_criterion = si_criterion)
-			
-			number_fields_lesion_grid = GridLesion.getAverageFieldNumberActiveCellsWithField()
-			number_fields_lesion_lec =LecLesion.getAverageFieldNumberActiveCellsWithField()
-			number_fields_lesion_mec =MecLesion.getAverageFieldNumberActiveCellsWithField()
-			number_fields_lesion_grid_std= GridLesion.getAverageFieldNumberActiveCellsWithFieldStd()
-			number_fields_lesion_lec_std =LecLesion.getAverageFieldNumberActiveCellsWithFieldStd()
-			number_fields_lesion_mec_std =MecLesion.getAverageFieldNumberActiveCellsWithFieldStd()
-			
-			av_size_grid = GridLesion.getAverageFieldSize()
-			av_size_lec = LecLesion.getAverageFieldSize()
-			av_size_mec = MecLesion.getAverageFieldSize()
-			av_size_grid_std = GridLesion.getAverageFieldSizeStd()
-			av_size_lec_std = LecLesion.getAverageFieldSizeStd()
-			av_size_mec_std = MecLesion.getAverageFieldSizeStd()
-			
-			av_active_grid = GridLesion.getNumberActiveCells()
-			av_active_lec = LecLesion.getNumberActiveCells()
-			av_active_mec = MecLesion.getNumberActiveCells()
 		
-			av_place_cells_grid = GridLesion.getNumberCellsWithField()
-			av_place_cells_lec = LecLesion.getNumberCellsWithField()
-			av_place_cells_mec = MecLesion.getNumberCellsWithField()
-		
+		#### lesion studies only when wsm cells are in the input
 		if prop == 0:
 			lesions = list(np.linspace(0,1,noise_points))#lesion prop of mec or lec or grid	
 			lesion_no_grid = np.tile(In.patterns, (1,len(lesions),1,1))
@@ -6896,61 +6786,48 @@ def hebbPaperNew():
 			for i, lesion in enumerate(lesions):
 				corrupted_cells_no_grid = np.array(random.sample(range(input_cells), int(input_cells * lesion)), 'int')
 				lesion_no_grid[0,i][:,corrupted_cells_no_grid] = 0
-
 			activation_no_grid = hippo.Ec_Ca3.getOutput(hippo.Ec_Ca3, input_pattern = lesion_no_grid)
 			wrong_no_grid = SpatialSim.getAverageProportionWrong(noisy_patterns = activation_no_grid[0])
 			lession_cells_no_grid = np.array(lesions)* input_cells
 			normalize(In.patterns[0])
-
-	
+		
+		#### get AutoCorrelation of the input
 		info = np.array(In.getAverageCorOverDistance(locations = In.getStoredlocations(), bins = bins))
 		bins_info = info[1]
 		if prop == 0:
 			infos = np.zeros([proportions.shape[0],info[1].shape[0]])
 			infos_kernel = np.zeros([kernel_sizes.shape[0],info[1].shape[0]])
 		infos[p] = info[0]
-		#infos[kernel_size == kernel_sizes][0] = info[0]
 
-			
-
-
-	#kernel sizes
+	###### loop over kernel sizes
 	for p, size in enumerate(kernel_sizes):
-		prop = props_to_plot[0]
-		if size != kernel_size:
-			g_cells = int(input_cells * prop)
-			l_cells = input_cells -g_cells
+		prop = props_to_plot[0] #default grid proportion
+		if size != kernel_size: ## if kernel size has not been used above
+			g_cells = int(input_cells * prop) #grid cells
+			l_cells = input_cells -g_cells #no. wsm cells
 			noise_levels = [0]
-			#peak = np.random.uniform(.5, 1.5, size = (1,  g_cells, 50,50))
+			#peak rates of grid fields
 			peak = np.random.normal(loc = 1, scale = .1, size = (1,  g_cells, 50,50))
+			#set up input with given kernel sizes
 			In = JointInput(grid_cells = g_cells, lec_cells = l_cells, border_cells = border_cells, inputMethod = Lec.makeActiveFilter, noiseMethod = Input.makeNoiseZero, actFunction = actFunction, number_patterns = res, number_to_store =res ,n_e =1,noise_levels = noise_levels, normed = 0, store_indizes = np.tile(np.arange(res), (1,1)), grid_mode = 'modules', rat=1, cage =[2,1],r_to_s = 0.32, spacings = None, sparsity = .99, size_kernel = size, peak = peak)
-			
+			#set up network
 			hippo = HippocampusFull(In = In, cells = cells, number_winner = number_winner, just_ca3 = 1, rec = 0 ,connectivity=connectivity,learnrate=learnrate, actFunctionsRegions = actFunctionsRegions, Ca3Activation = Ca3Activation)
 			SpatialSim = Spatial(patterns = np.copy(hippo.Ec_Ca3.Cor['StoredRecalled'].patterns_2[0]), cage = In.cage, min_size = min_size, min_rate = min_rate, si_criterion = si_criterion, max_size = max_size)
 			
+			### get different statistics
 			numbers_kernel[size == kernel_sizes] = SpatialSim.getAverageFieldNumberActiveCellsWithField()
 			av_sizes_kernel[size == kernel_sizes] = SpatialSim.getAverageFieldSize()
 			active_kernel[size == kernel_sizes]  = SpatialSim.getNumberActiveCells()
 			place_cells_kernel[size == kernel_sizes] = SpatialSim.getNumberCellsWithField()
-			#normalize(In.patterns[0])
-			print 'shape in patterns'
-			#Cor = Corelations(patterns_1 = In.patterns[0], patterns_2 = In.patterns)
-			#info = np.array(Cor.getAverageOverlapOverDistance(locations = In.getStoredlocations(), bins = bins))
 			info = np.array(In.getAverageCorOverDistance(locations = In.getStoredlocations(), bins = bins))
 			infos_kernel[size == kernel_sizes] = copy.copy(info)[0]
-			print 'size_____________________- != 6', size
-		else:
-			print 'size_________________________ = 6?????', size
-			#print prop == proportions
-			#print size == kernel_sizes
-			##print kernel_sizes
+		else: #use date computed in the grid proportion loop
 			numbers_kernel[size == kernel_sizes] = numbers[prop == proportions]
 			av_sizes_kernel[size == kernel_sizes] = av_sizes[prop == proportions]
 			active_kernel[size == kernel_sizes]  = active[prop == proportions]
 			place_cells_kernel[size == kernel_sizes] = place_cells[prop == proportions]
 			infos_kernel[size == kernel_sizes] = infos[prop == proportions]
-			print infos_kernel[6 == kernel_sizes] == infos[1]
-			##a = o
+
 	mean  = np.array(map(np.mean, sizes))
 	max_numbers = np.max([np.max(numbers),np.max(numbers_kernel)])
 	max_sizes = np.max([np.max(mean),np.max(av_sizes_kernel)])
@@ -7114,8 +6991,8 @@ def hebbPaperNew():
 
 def hebbPaperLesionsErr():
 	
+	###### see hebbPaperNew() for better documentation; only things not used in that function are documented here
 	fig2 = plt.figure(figsize = [7.5, 6])
-	#fig.subplots_adjust(wspace=0.6, hspace=.4, left = .1, right = .95)
 	ax_ind2 = [2,3]
 	
 	
@@ -7154,6 +7031,9 @@ def hebbPaperLesionsErr():
 	kernel_sizes = np.array([6])
 	kernels_to_plot= np.array([6])
 	k = 0
+	
+	
+	### number of simulatuions; results are averaged later
 	iterations = 10
 	
 
@@ -7165,7 +7045,7 @@ def hebbPaperLesionsErr():
 	size = 	np.zeros(iterations)
 	size_lec = 	np.zeros(iterations)
 	size_mec = 	np.zeros(iterations)
-	size_grid = 	np.zeros(iterations)
+	size_grid = np.zeros(iterations)
 		
 	act = np.zeros(iterations)
 	act_lec = np.zeros(iterations)
@@ -7173,6 +7053,7 @@ def hebbPaperLesionsErr():
 	act_grid =np.zeros(iterations)
 	
 	
+	### loop over simulations
 	for z in range(iterations):
 		sizes = []
 		numbers = np.zeros(proportions.shape[0])
@@ -7190,7 +7071,7 @@ def hebbPaperLesionsErr():
 		place_cells_kernel =  np.zeros(kernel_sizes.shape[0])
 	
 		
-	
+		#### loop over grid proportion as in hebbPaperNew() 
 		for p, prop in enumerate(proportions):
 			g_cells = int(input_cells * prop)
 			l_cells = input_cells -g_cells
@@ -7198,9 +7079,6 @@ def hebbPaperLesionsErr():
 				noise_levels = np.array(np.linspace(0,input_cells-1, noise_points), 'int')
 			else:
 				noise_levels = [0]
-			
-			print 'proportion = ', prop
-			#peak = np.random.uniform(.5, 1.5, size = (1,  g_cells, 50,50))
 			peak = np.random.normal(loc = 1, scale = .1, size = (1,  g_cells, 50,50))
 			In = JointInput(grid_cells = g_cells, lec_cells = l_cells, border_cells = border_cells, inputMethod = Lec.makeActiveFilter, noiseMethod = Input.makeNoiseZero, actFunction = actFunction, number_patterns = res, number_to_store =res ,n_e =1,noise_levels = noise_levels, normed = 0, store_indizes = np.tile(np.arange(res), (1,1)), grid_mode = 'modules', rat=1, cage =[2,1],r_to_s = 0.32, spacings = None, sparsity = .99, size_kernel = kernel_size, peak = peak)
 			
@@ -7212,6 +7090,8 @@ def hebbPaperLesionsErr():
 			active[p] = SpatialSim.getNumberActiveCells()
 			place_cells[p] = SpatialSim.getNumberCellsWithField()
 			av_sizes[p] = SpatialSim.getAverageFieldSize()
+			
+			### if grid proportion is default compute lesion studies
 			if prop == props_to_plot[0]:
 				numbers_std = SpatialSim.getAverageFieldNumberActiveCellsWithFieldStd()
 				sizes_std = SpatialSim.getAverageFieldSizeStd()
@@ -7236,23 +7116,14 @@ def hebbPaperLesionsErr():
 					lesion_all[0,i][:,corrupted_cells_all] = 0
 				
 				activation_mec = hippo.Ec_Ca3.getOutput(hippo.Ec_Ca3, input_pattern = lesion_mec)
-				#CorMec = Corelations(patterns_1 = hippo.Ec_Ca3.Cor['StoredRecalled'].patterns_2[0], patterns_2 = activation_mec)
-				#InputMec = Corelations(patterns_1 = In.patterns, patterns_2 = lesion_mec)
-			
 				activation_lec = hippo.Ec_Ca3.getOutput(hippo.Ec_Ca3, input_pattern = lesion_lec)
-				#CorLec = Corelations(patterns_1 = hippo.Ec_Ca3.Cor['StoredRecalled'].patterns_2[0], patterns_2 = activation_lec)
-				#InputLec = Corelations(patterns_1 = In.patterns, patterns_2 = lesion_lec)
-				
 				activation_grid = hippo.Ec_Ca3.getOutput(hippo.Ec_Ca3, input_pattern = lesion_grid)
-				#CorGrid = Corelations(patterns_1 = hippo.Ec_Ca3.Cor['StoredRecalled'].patterns_2[0], patterns_2 = activation_grid)
-				#InputGrid = Corelations(patterns_1 = In.patterns, patterns_2 = lesion_grid)
 				activation_all = hippo.Ec_Ca3.getOutput(hippo.Ec_Ca3, input_pattern = lesion_all)
 				
 				wrong_mec = SpatialSim.getAverageProportionWrong(noisy_patterns = activation_mec[0])
 				wrong_lec = SpatialSim.getAverageProportionWrong(noisy_patterns = activation_lec[0])
 				wrong_grid = SpatialSim.getAverageProportionWrong(noisy_patterns = activation_grid[0])
 				wrong_all = SpatialSim.getAverageProportionWrong(noisy_patterns = activation_all[0])
-				#wrong_all = SpatialSim.getAverageProportionWrong(noisy_patterns = hippo.Ec_Ca3.Cor['StoredRecalled'].patterns_2)
 			
 				lession_cells = np.array(lesions)* input_cells/2.
 				lession_cells_grid = np.array(lesions)* input_cells * prop
@@ -7327,8 +7198,6 @@ def hebbPaperLesionsErr():
 	
 	ax4 = fig2.add_subplot(ax_ind2[0], ax_ind2[1], 4)
 	ax4.bar(left = [1,1.5,2,2.5], width = .5, height = [np.mean(number_active), np.mean(number_active_lec),np.mean(number_active_mec),np.mean(number_active_grid)], yerr = [np.std(number_active), np.std(number_active_lec),np.std(number_active_mec),np.std(number_active_grid)], align = 'center', color = ['k', 'b', 'r','y'], ecolor = 'k')
-	#ax4.xaxis.set_visible(False)
-	#ax4.legend(loc = 'best', prop={'size':10})
 	ax4.set_ylabel('no. fields')
 	ax4.set_xticks([1,1.5,2,2.5])
 	ax4.set_xticklabels(['No', 'LEC', 'MEC','Grid'])
@@ -7339,8 +7208,6 @@ def hebbPaperLesionsErr():
 	
 	ax4 = fig2.add_subplot(ax_ind2[0], ax_ind2[1], 5)
 	ax4.bar(left = [1,1.5,2,2.5], width = .5, height = [np.mean(size), np.mean(size_lec),np.mean(size_mec),np.mean(size_grid)], yerr = [np.std(size), np.std(size_lec),np.std(size_mec),np.std(size_grid)], align = 'center', color = ['k', 'b', 'r', 'y'], ecolor = 'k')
-	#ax4.xaxis.set_visible(False)
-	#ax4.legend(loc = 'best', prop={'size':10})
 	ax4.set_ylabel('pf size '+ r'$(m^2)$')
 	ax4.set_xticks([1,1.5,2,2.5])
 	ax4.set_xticklabels(['No', 'LEC', 'MEC','Grid'])
@@ -7349,8 +7216,6 @@ def hebbPaperLesionsErr():
 	
 	ax4 = fig2.add_subplot(ax_ind2[0], ax_ind2[1], 6)
 	ax4.bar(left = [1,1.5,2,2.5], width = .5, height = [np.mean(act), np.mean(act_lec),np.mean(act_mec),np.mean(act_grid)], yerr = [np.std(act), np.std(act_lec),np.std(act_mec),np.std(act_grid)], align = 'center', color = ['k', 'b', 'r', 'y'])
-	#ax4.xaxis.set_visible(False)
-	#ax4.legend(loc = 'best', prop={'size':10})
 	ax4.set_ylabel('no. active cells')
 	ax4.set_xticks([1,1.5,2,2.5])
 	ax4.set_xticklabels(['No', 'LEC', 'MEC','Grid'])
@@ -7453,34 +7318,17 @@ def hebbPaperStabilityErr(): #Lesions after learning
 				lesion_lec[0,i][:,corrupted_cells_lec] = 0
 				lesion_grid[0,i][:,corrupted_cells_grid] = 0
 			
-			#print lesion_lec[0,-1]
-			#print InLec.input_stored
-			#print lesion_lec.shape
-			#print InLec.input_stored.shape	
-			#k = affe
-			
 			activation_no = hippo.Ec_Ca3.getOutput(hippo.Ec_Ca3, input_pattern = In.noisy_input_stored)
 			activation_mec = hippo.Ec_Ca3.getOutput(hippo.Ec_Ca3, input_pattern = lesion_mec)
-			#activation_random_input =  hippo.Ec_Ca3.getOutput(hippo.Ec_Ca3, input_pattern = np.random.normal(loc =10, scale =2, size = In.noisy_input_stored.shape))
-			#activation_random_input = np.random.normal(loc =10, scale =2, size = activation_random_input.shape)
 			activation_lec = hippo.Ec_Ca3.getOutput(hippo.Ec_Ca3, input_pattern = lesion_lec)
 			activation_grid = hippo.Ec_Ca3.getOutput(hippo.Ec_Ca3, input_pattern = lesion_grid)
 	
 			CorMec = Corelations(patterns_1 = hippo.Ec_Ca3.Cor['StoredRecalled'].patterns_2[0], patterns_2 = activation_mec[0], env = 0)
 			CorNo = Corelations(patterns_1 = hippo.Ec_Ca3.Cor['StoredRecalled'].patterns_2[0], patterns_2 = activation_no[0], env = 0)
-			#CorRand = Corelations(patterns_1 = hippo.Ec_Ca3.Cor['StoredRecalled'].patterns_2[0], patterns_2 = activation_random_input[0], env = 0)
 			CorLec = Corelations(patterns_1 = hippo.Ec_Ca3.Cor['StoredRecalled'].patterns_2[0], patterns_2 = activation_lec[0], env = 0)
 			CorGrid = Corelations(patterns_1 = hippo.Ec_Ca3.Cor['StoredRecalled'].patterns_2[0], patterns_2 = activation_grid[0], env = 0)
 
-		
-			#SpatialSim = Spatial(patterns = np.copy(hippo.Ec_Ca3.Cor['StoredRecalled'].patterns_2[0]), cage = In.cage, min_size = min_size, min_rate = min_rate, max_size = max_size, si_criterion = si_criterion)
-			#wrong_mec = SpatialSim.getAverageProportionWrong(noisy_patterns = activation_mec[0])[-1]
-			#wrong_grid = SpatialSim.getAverageProportionWrong(noisy_patterns = activation_grid[0])[-1]
-			#wrong_lec = SpatialSim.getAverageProportionWrong(noisy_patterns = activation_lec[0])[-1]
-			
-			
 			corr_lec[stability_noise,z] =  InputLec.getOrigVsOrig()[stability_noise]
-			#reenterd_corr_rand[stability_noise,z] = CorRand.getOrigVsOrig()[stability_noise]
 			reenterd_corr[stability_noise,z] = CorNo.getOrigVsOrig()[stability_noise]
 			reenterd_corr_grid[stability_noise,z] = CorGrid.getOrigVsOrig()[-1]
 			reenterd_corr_lec[stability_noise,z] =  CorLec.getOrigVsOrig()[-1]
@@ -7512,53 +7360,11 @@ def hebbPaperStabilityErr(): #Lesions after learning
 			active_grid[stability_noise,z] = SpatialSim.getNumberActiveCells()
 			place_cells_grid[stability_noise,z] = SpatialSim.getNumberCellsWithField()
 	
-	
-		#if ax_count in [1]:
-			#ax4 = fig2.add_subplot(ax_ind2[0], ax_ind2[1], (ax_count)*2 +1)
-			#ax4.plot(range(stab_points), InputLec.getOrigVsOrig(), marker = 'd', label = 'LEC only')
-			#ax4.plot(stability_noise, InputLec.getOrigVsOrig()[stability_noise], marker = 'D', c = 'r', markersize = 12)
-			#ax4.plot(range(stab_points), InputMec.getOrigVsOrig(), marker = 'd', label = 'Mec only')
-			#ax4.plot(range(stab_points), In.getOrigVsOrig(), marker = 'd', label = 'whole')
-			##ax4.legend()
-			#ax4.set_ylim((0,1))
-			
-			#ax4 = fig2.add_subplot(ax_ind2[0], ax_ind2[1], (ax_count)*2 +1)
-			#ax4.bar(left = [.5,1,1.5,2,2.5], width = .5, height = [np.mean(reenterd_corr_rand),np.mean(reenterd_corr), np.mean(wrong_lec),np.mean(wrong_mec),np.mean(wrong_grid)], yerr = [np.std(reenterd_corr_rand), np.std(reenterd_corr), np.std(reenterd_corr_lec),np.std(reenterd_corr_mec),np.std(reenterd_corr_grid)], align = 'center', color = ['k', 'b', 'r', 'y'], ecolor = 'k')
-			#ax4.set_ylim(0,1)
-			##ax4.xaxis.set_visible(False)
-			##ax4.legend(loc = 'best', prop={'size':10})
-			#ax4.set_ylabel('error')
-			#ax4.set_xticks([1,1.5,2,2.5])
-			#ax4.set_xticklabels(['No', 'LEC', 'MEC','Grid'])
-			#makeLabel(ax = ax4, label = 'E', sci = 0 )
-			
-	#for stability_noise in range(3):
-		#ax4 = fig2.add_subplot(ax_ind2[0], ax_ind2[1], (stability_noise)*2 +2)
-		#ax4.bar(left = [-.5,1,1.5,2,2.5], width = .5, height = [np.mean(corr_lec[stability_noise]),np.mean(reenterd_corr[stability_noise]), np.mean(reenterd_corr_lec[stability_noise]),np.mean(reenterd_corr_mec[stability_noise]),np.mean(reenterd_corr_grid[stability_noise])], yerr = [np.std(corr_lec[stability_noise]), np.std(reenterd_corr[stability_noise]), np.std(reenterd_corr_lec[stability_noise]),np.std(reenterd_corr_mec[stability_noise]),np.std(reenterd_corr_grid[stability_noise])], align = 'center', color = ['m','k', 'b', 'r', 'y'], ecolor = 'k')
-		#ax4.set_ylim(0,1)
-	##ax4.xaxis.set_visible(False)
-	##ax4.legend(loc = 'best', prop={'size':10})
-		#ax4.set_ylabel('Stability')
-		#ax4.set_xticks([-.5,1,1.5,2,2.5])
-		#ax4.set_xticklabels(['LEC cells', 'No', 'LEC', 'MEC','Grid'])
-		#makeLabel(ax = ax4, label = 'E', sci = 0 )
 		
 		
 	stab_points = np.mean(corr_lec, -1)
-	print stab_points
-	print reenterd_corr
-	print np.mean(reenterd_corr, -1)
-		
-		
-	print stab_points.shape
-	print np.mean(reenterd_corr, -1).shape
-	print reenterd_corr.shape
-		
-		
-
 		
 	ax4 = fig2.add_subplot(2, 2, 1)
-	#ax4.errorbar(stab_points, np.mean(corr_lec, -1), yerr = np.std(corr_lec , -1),color = 'm', ecolor = 'k', label = 'LEC cells')
 	ax4.errorbar(stab_points, np.mean(reenterd_corr, -1), yerr = np.std(reenterd_corr , -1),color = 'k', ecolor = 'k')
 	ax4.errorbar(stab_points, np.mean(reenterd_corr_lec, -1) ,yerr = np.std(reenterd_corr_lec , -1),color = 'b', ecolor = 'k')
 	ax4.errorbar(stab_points, np.mean(reenterd_corr_mec, -1) ,yerr = np.std(reenterd_corr_mec , -1),color = 'r', ecolor = 'k')	
@@ -7574,7 +7380,6 @@ def hebbPaperStabilityErr(): #Lesions after learning
 	makeLabel(ax = ax4, label = 'A', sci = 0 )	
 
 	ax4 = fig2.add_subplot(222)
-	#ax4.errorbar(stab_points, np.mean(corr_lec, -1), yerr = np.std(corr_lec , -1),color = 'm', ecolor = 'k', label = 'LEC cells')
 	ax4.errorbar(stab_points, np.mean(mean_sizes, -1), yerr = np.std(mean_sizes , -1),color = 'k', ecolor = 'k')
 	ax4.errorbar(stab_points, np.mean(mean_sizes_lec, -1) ,yerr = np.std(mean_sizes_lec , -1),color = 'b', ecolor = 'k')
 	ax4.errorbar(stab_points, np.mean(mean_sizes_mec, -1) ,yerr = np.std(mean_sizes_mec , -1),color = 'r', ecolor = 'k')	
@@ -7640,14 +7445,14 @@ def hebbPaperStabilityErr(): #Lesions after learning
 ### Figure 4
 #SVCPaperOneMod()
 
-## Figure 5 and 6A
+###Figure 5 and 6A
 #hebbPaperNew()
 
-## Figure 6C,D,E
+### Figure 6C,D,E
 hebbPaperLesionsErr()
 
 ### Figure7
-#hebbPaperStabilityErr()
+hebbPaperStabilityErr()
 
 
 end = time.time()-begin
